@@ -1,0 +1,5 @@
+ansible_python_interpreter: /usr/bin/python3.12
+app_path: /home/web_app
+domain_name: localhost
+php_host: php
+php_port: 9000
