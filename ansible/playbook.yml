@@ -1,0 +1,9 @@
+- hosts: all
+  become: true
+  vars_files:
+    - vars/main.yml
+  roles:
+    - ports
+    - docker
+    - docker_compose
+    - web_app

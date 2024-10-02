@@ -1,0 +1,17 @@
+---
+- name: Installing Docker-Compose
+  become: true
+  block:
+    - name: Getting the last Docker-Compose version
+      uri:
+        url: https://api.github.com/repos/docker/compose/releases/latest
+        body_format: json
+      register: page
+
+    - name: Installing Docker-Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/{{ page.json.tag_name }}/docker-compose-Linux-x86_64"
+        dest: /usr/local/bin/docker-compose
+        mode: 0755
+
+  when: ansible_facts['distribution'] == 'Ubuntu'

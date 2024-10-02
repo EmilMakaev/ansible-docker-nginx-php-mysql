@@ -1,0 +1,25 @@
+---
+- name: Open ports 22 and 80 on Ubuntu
+  become: true
+  block:
+    - name: Ensure UFW is installed
+      apt:
+        name: ufw
+        state: present
+
+    - name: Allow incoming traffic on port 22
+      ufw:
+        rule: allow
+        name: "OpenSSH"
+
+    - name: Allow incoming traffic on port 80
+      ufw:
+        rule: allow
+        port: 80
+        proto: tcp
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+
+  when: ansible_facts['distribution'] == 'Ubuntu'

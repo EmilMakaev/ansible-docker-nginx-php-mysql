@@ -1,0 +1,27 @@
+---
+- name: Creates directory
+  ansible.builtin.file:
+    path: "{{ app_path }}/nginx/"
+    state: directory
+
+- name: Generating a configuration file for Nginx
+  template:
+    src: "templates/nginx.conf.j2"
+    dest: "{{ app_path }}/nginx/default.conf"
+  notify: Restart Nginx container
+
+- name: Copy project files to server
+  copy:
+    src: "files/{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "docker-compose.yml", dest: "{{ app_path }}/docker-compose.yml" }
+    - { src: "php", dest: "{{ app_path }}" }
+    - { src: "db", dest: "{{ app_path }}" }
+    - { src: "Dockerfile", dest: "{{ app_path }}/Dockerfile" }
+    - { src: ".env", dest: "{{ app_path }}/.env" }
+
+- name: Run Docker-Compose
+  command: docker-compose up -d
+  args:
+    chdir: "{{ app_path }}"
